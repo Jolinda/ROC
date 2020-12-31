@@ -23,6 +23,10 @@ function MSS_RunMyMSS_ROC(expt)
 % allows a user-specifed version (1). These are set as part of the set up
 % variables.
 
+ 
+
+
+
 %% Set up variables for subject info and script info
 
 DEBUG = 0;
@@ -50,6 +54,19 @@ dropboxDir = '~/Dropbox (University of Oregon)/UO-SAN Lab/Berkman Lab/Devaluatio
 if DEBUG
     button_box
 end;
+
+%% added jcs
+% in case someone left us in a bad state
+DisableKeysForKbCheck([]);
+
+if ~isfolder(resource_path)
+    disp("Select resource folder");
+    resource_path = uigetdir(pwd, 'Select resource folder');
+end
+if ~isfolder(output_folder)
+    disp("Select output folder");
+    output_folder = uigetdir(pwd, 'Select output folder');
+end
 
 %% Basic Input Testing
 
@@ -254,8 +271,16 @@ duration = zeros(1,number_of_trials); %vector to record the duration of each tri
 key_presses = struct('key',{{}},'time',[],'stimulus',{{}}); %matrix to hold key pressed, time of key press, and current stimulus (will increment up)
 
 
+%% load key definitions file 
+% added by jcs
+mykeys = ButtonLoad();
+inputDevice = mykeys.right_index;
+homeDevice = mykeys.keyboard_index;
+triggerDevice = mykeys.trigger_index;
+trigger = mykeys.trigger;
+
 %% set up input devices
-[inputDevice, homeDevice] = setUpDevices(button_box);
+%[inputDevice, homeDevice] = setUpDevices(button_box);
 
 %% Create place to save the data collected to a file
 
@@ -285,7 +310,7 @@ end
 
 %% Setup initial screen & display settings
 
-HideCursor;
+%HideCursor;
 
 % Set up the onscreen window, and fill with black (0) (not white,255)
 Screen('Preference', 'SkipSyncTests', 1); % use if VBL fails; use this setting on the laptop
@@ -468,8 +493,8 @@ end
 Screen('Flip',w);
 
 if button_box
-    trigger = 52;
-    experiment_start_time=KbTriggerWait(trigger,inputDevice);
+%    trigger = 52;
+    experiment_start_time=KbTriggerWait(trigger,triggerDevice);
     DisableKeysForKbCheck(trigger); % So trigger is no longer detected
 else
     KbWait(homeDevice);  % wait for keypress
@@ -769,20 +794,22 @@ if run_code > 0
     experiment_output(output_filename,PRINT_OUTPUT); %Results will always print to screen, PRINT_OUTPUT determines whether gets saved to txt file as well
 end
 
+% temp disable jcs
 % copy files to dropbox
-if run_code > 0
-    copyfile(output_filename, dropboxDir);
-    disp(sprintf('Output file copied to %s',dropboxDir));
-end
+%if run_code > 0
+%    copyfile(output_filename, dropboxDir);
+%    disp(sprintf('Output file copied to %s',dropboxDir));
+%end
 
 % move output files to output folder
-if run_code > 0
-    movefile(output_filename,output_folder);
-    movefile([output_filename,'.txt'],output_folder);
-end
+%if run_code > 0
+%    movefile(output_filename,output_folder);
+%    movefile([output_filename,'.txt'],output_folder);
+%end
 end
 
-function [response_keyboard, internal_keyboard] = setUpDevices(MRI)
+% we don't want to call this anymore
+function [response_keyboard, internal_keyboard] = xxsetUpDevices(MRI)
 numDevices=PsychHID('NumDevices');
 devices=PsychHID('Devices');
 
