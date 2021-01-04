@@ -809,7 +809,7 @@ end
 end
 
 % we don't want to call this anymore
-function [response_keyboard, internal_keyboard] = xxsetUpDevices(MRI)
+function [response_keyboard, internal_keyboard] = setUpDevices(MRI)
 numDevices=PsychHID('NumDevices');
 devices=PsychHID('Devices');
 
