@@ -15,7 +15,7 @@ if expt.MRI_code == 1
     expt.default_start='scan_start.jpg';
 else
     session_type='beh';
-    expt.run_code=0;
+    expt.run_code=0; 
     expt.default_start='exp_start.jpg';
 end
 

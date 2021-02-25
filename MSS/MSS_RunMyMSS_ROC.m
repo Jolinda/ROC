@@ -53,7 +53,7 @@ dropboxDir = '~/Dropbox (University of Oregon)/UO-SAN Lab/Berkman Lab/Devaluatio
 
 if DEBUG
     button_box
-end;
+end
 
 %% added jcs
 % in case someone left us in a bad state
@@ -81,15 +81,15 @@ else
         tdfile_path = [pwd '/'];
     else    
         tdfile_path = tdfile(1:slash(end)); %if there are slashes, we assume that everything preceeding the last slash is the directory and everything following is the file name for your script
-    end;
+    end
     
     if DEBUG
         fprintf('tdfile_path = %s\n',tdfile_path)
-    end;
+    end
     
     %read in tab delimited file set up like MacStim (textread will read in as col vectors)
     [type,num,pre,maxTime,totTime,rep,stpEvt,bg,st,bgFile,stFile,hshift,vshift,tag]= textread(tdfile, '%c %d %f %f %f %d %s %c %c %s %s %d %d %s','delimiter', '\t', 'whitespace', '', 'commentstyle', 'matlab' );
-end;
+end
 
 if ~exist('startToggle')
     startToggle=0;
@@ -102,66 +102,66 @@ if ~exist('resource_path') %if no resource path is specified, we assume that the
     resource_path = tdfile_path;
 elseif isempty(resource_path)
     resource_path = tdfile_path;
-end;
+end
 
 if ~exist(resource_path,'dir')
     fprintf('WARNING: %s IS NOT A VALID PATH.\n',resource_path);
     return
-end;
+end
 
 if resource_path(1) ~= '/' %if resource_path does not start with a slash we assume that the resource dir is relative to the tdfile dir
     resource_path = [tdfile_path resource_path];
-end;
+end
 
 if resource_path(end) ~= '/' %make sure resource_path ends in a slash so that it can be concatenated with stimulus file names later
     resource_path = [resource_path '/'];
-end;
+end
 
 if DEBUG 
     fprintf('resource_path = %s\n', resource_path);
-end;
+end
     
 if length(hshift) ~= length(stFile)
     fprintf('Warning: the vector hshift is shorter than the number of trials you have.  Filling with zeros\n');
     hshift = [hshift zeros(1,length(stFile)-length(hshift))];
-end;
+end
 
 if length(vshift) ~= length(stFile)
     fprintf('Warning: the vector vshift is shorter than the number of trials you have.  Filling with zeros\n');
     vshift = [vshift zeros(1,length(stFile)-length(vshift))];
-end;
+end
 
 if length(type) ~= length(stFile)
     fprintf('Warning: Your type vector and your stFile vector do not match in length\n');
-end;
+end
 
 if length(pre) ~= length(stFile)
     fprintf('Warning: Your pre vector and your stFile vector do not match in length\n');
-end;
+end
 
 if length(maxTime) ~= length(stFile)
     fprintf('Warning: Your maxTime vector and your stFile vector do not match in length\n');
-end;
+end
 
 if length(totTime) ~= length(stFile)
     fprintf('Warning: Your totTime vector and your stFile vector do not match in length\n');
-end;
+end
 
 if length(stpEvt) ~= length(stFile)
     fprintf('Warning: Your stpEvt vector and your stFile vector do not match in length\n');
-end;
+end
 
 if length(bg) ~= length(stFile)
     fprintf('Warning: Your bg vector and your stFile vector do not match in length\n');
-end;
+end
 
 if length(st) ~= length(stFile)
     fprintf('Warning: Your st vector and your stFile vector do not match in length\n');
-end;
+end
 
 if length(bgFile) ~= length(stFile)
     fprintf('Warning: Your bgFile vector and your stFile vector do not match in length\n');
-end;
+end
 
 
 for c = 1:length(stFile)
@@ -169,61 +169,61 @@ for c = 1:length(stFile)
     if isempty(type(c))
         fprintf('In the future, you should specify a type for trial %d.  Reverting to default (s)\n',c);
         type(c) = 's';
-    end;
+    end
      
     if isempty(num(c))
         fprintf('Reverting to default (1) for num(%d)\n',c)
         num(c) = '1';
-    end;
+    end
         
     if isempty(pre(c))
         fprintf('Reverting to default (0) for pre(%d)\n',c)
         pre(c) = 0;
-    end;
+    end
     
     %if isempty(maxTime(c))
     %    fprintf('Reverting to default (totTime) for maxTime(%d)\n',c)
     %    bg(c) = totTime(c);
-    %end;
+    %end
         
     %if isempty(totTime(c))
     %    fprintf('Reverting to default (maxTime) for totTime(%d)\n',c)
     %    bg(c) = maxTime(c);
-    %end;
+    %end
     
     if isempty(bg(c))
         fprintf('Reverting to default (t) for bg(%d)\n',c)
         bg(c) = 't';
-    end;
+    end
     
     if isempty(st(c))
         fprintf('Reverting to default (t) for st(%d)\n',c)
         st(c) = 't';
-    end;
+    end
     
     if isempty(rep(c))
         fprintf('Reverting to default rep for rep(%d)\n',c)
         rep(c) = 1;
-    end;
-end;
+    end
+end
 
 if length(tag) ~= length(stFile)
     for i = length(tag) +1:length(stFile)
         tag{i} = '';
-    end;
-end;
+    end
+end
     
     
 if DEBUG
     fprintf('stFile{1} = %s\n',stFile{1});
     fprintf('hshift = %d\n',hshift);
     fprintf('vshift = %d\n',vshift);
-end;
+end
 
-if ~exist('tdfile'), 
+if ~exist('tdfile')
 	fprintf('File does not exist\n');
     return;
-end;
+end
 
 %% Define Defaults and storage variables
 
@@ -232,7 +232,7 @@ for i=1:length(stFile)
     if DEBUG
         fprintf('stFile{i} pre = %s\n',stFile{i});
         fprintf('resource_path = %s\n',resource_path);
-    end;
+    end
     
     %text does not need a relative directory structure, but for all other
     %resources, makes sure that directory is appended to the front of the
@@ -243,16 +243,16 @@ for i=1:length(stFile)
     
     if st(i) ~= 't' && ~isempty(stFile{i})
         stFile{i} = [resource_path stFile{i}];
-    end;
+    end
         
     if bg(i) ~= 't' && ~isempty(bgFile{i})
         bgFile{i} = [resource_path bgFile{i}];
-    end;  
+    end  
     
     if DEBUG
         fprintf('stFile{i} post = %s\n',stFile{i});
-    end;
-end;
+    end
+end
 
 % set up variables controlling trials and defaults
 number_of_trials=length(stFile);
@@ -348,11 +348,11 @@ imagetex = zeros(1,length(st)); %initialize imagetex for pics
 pRect = cell(1,length(st));
 stimulus_duration = zeros(1,length(st));
 
-for i = 1:length(st),
+for i = 1:length(st)
     if DEBUG
         fprintf('Preloading: i = %d\n',i);
         fprintf('Preloading: file = %s\n',stFile{i});
-    end;
+    end
     
     %preload movies
     if st(i) == 'm'
@@ -368,14 +368,14 @@ for i = 1:length(st),
         
         if DEBUG
             fprintf('Trying to read sound from line %d\n',i)
-        end;
+        end
     
-     %preload pics
+    %preload pics
     elseif st(i) == 'p'
         if exist(stFile{i},'file') ~= 2 %if file doesn't exist, skip trial
             fprintf('Warning: your file %s does not exist on trial %d.\n',stFile{i},i);
             continue;
-        end;
+        end
         a = strcmp(stFile,stFile{i});
         b = strcmp(st,st(i));
         h = zeros(length(st),1);
@@ -396,13 +396,13 @@ for i = 1:length(st),
             pRect{i}=pr;
             clear img;
         end
-    end;
+    end
     
     if bg(i) == 'p'
         if exist(bgFile{i},'file') ~= 2 %if file doesn't exist, skip trial
              fprintf('Warning: your file %s does not exist on trial %d.\n',bgFile{i},i);
             continue;
-        end;
+        end
         
         a = strcmp(stFile,stFile{i});
         b = strcmp(st,st(i));
@@ -429,7 +429,7 @@ for i = 1:length(st),
             bRect{i}=pr;
             clear img;
         end
-    end;
+    end
     
     %set stimulus duration
     if ~isempty(maxTime(i)) && st(i) ~= 's'
@@ -437,7 +437,7 @@ for i = 1:length(st),
         if maxTime(i) == 0 %this happens if left blank in worksheet (textread function reads blanks as zeros)
             stimulus_duration(i) = default_stimulus_duration;
             fprintf('WARNING: reverted to default stimulus duration for cycle %d, st = %s, maxTime(i) = %f\n',i,stFile{i},maxTime(i))
-        end;
+        end
     elseif st(i) == 's'
         %Pre calculate sound lengths
         %Note: stSoundList{i,1} = x = actual audio, stSoundList{i,2} = fs =frames/sec 
@@ -450,21 +450,21 @@ for i = 1:length(st),
             stimulus_duration(i) = maxTime(i);
             if DEBUG
                 fprintf('Made it into this loop. Sound stimulus duration = %f\n',stimulus_duration(i));
-            end;     
-        end;
+            end     
+        end
     else
         stimulus_duration(i) = default_stimulus_duration;
         if DEBUG
             fprintf('Reverting to default stimulus duration on cycle %d\n',i);
-        end;
-    end;
+        end
+    end
 
     if isempty(stFile{i}) && st(i) == 't'
         fprintf('Warning: stFile{%d} = []\n',i);
         stFile{i} = '+'; %default to fixation cross
-    end;
+    end
     
-end;
+end
 
 % Preload start files
 sImg_kid = imread(kid_start);
@@ -476,7 +476,7 @@ if ~isempty(find(st == 's',1))
     % Perform basic initialization of the sound driver:
     InitializePsychSound;
     PsychPortAudio('Verbosity',1);
-end;
+end
 
 %% Start experiment and Cycle through trials
 
@@ -505,7 +505,7 @@ end
 
 %experiment_start_time = GetSecs;
 
-for j = 1:number_of_trials,
+for j = 1:number_of_trials
     i = trial_order(j); %run the stimuli in the order specified by the trial_order array
     
     pre_start_time = GetSecs; %anchor as start of trial 
@@ -520,13 +520,13 @@ for j = 1:number_of_trials,
         elseif bg(i) == 'p' %background is a picture
             %sets image up for the screen
             bg_display = sprintf('Screen(''DrawTexture'',w,bg_imagetex(i),[],bRect{i});');
-        end;
+        end
     else %if no background is specified, default background is fixation cross
         bg_display = default_display;
         if DEBUG
             fprintf('reverting to default background on cycle %d\n',i);
-        end;
-    end;
+        end
+    end
    
     %Display background stimulus for time specified in pre
     if pre(i) > 0
@@ -534,7 +534,7 @@ for j = 1:number_of_trials,
         Screen('Flip',w);
         while GetSecs < pre_start_time+pre(i)
             [keyIsDown,secs,keyCode]=KbCheck(inputDevice);
-            if keyIsDown, %key is pressed
+            if keyIsDown %key is pressed
                 key_presses.key{length(key_presses.key)+1} = KbName(keyCode);
                 key_presses.time(length(key_presses.time)+1) = GetSecs - experiment_start_time;
                 if isempty(bgFileName{i})
@@ -542,13 +542,13 @@ for j = 1:number_of_trials,
                 else    
                     key_presses.stimulus{length(key_presses.stimulus)+1} = [bgFileName{i} 'displayed, during pre stimulus interval '];
                 end
-            end;
+            end
             while keyIsDown && GetSecs < pre_start_time+pre(i)
                 [keyIsDown,secs,keyCode]=KbCheck(inputDevice);
                 WaitSecs(0.001);
             end
-        end;
-    end;
+        end
+    end
     
     %%%%%%%%%%%%%%%%%%%%%%%
     %SETUP PRIMARY STIMULUS
@@ -563,7 +563,7 @@ for j = 1:number_of_trials,
             key_presses.key = [key_presses.key keys.key]; %append keys pressed during movie to key_presses
             key_presses.time = [key_presses.time keys.time + movie_start - experiment_start_time];
             key_presses.stimulus = [key_presses.stimulus arrayfun( @(x) stFileName{i},zeros(1,length(keys.key)),'UniformOutput',false)];
-        end; 
+        end 
 
         %update key info to save
         run_info.onsets=onset;
@@ -582,7 +582,7 @@ for j = 1:number_of_trials,
             if DEBUG
                 fprintf('stFile(%d) = %s\n',i,stFile{i});
                 fprintf('size(stFile(%d)=%d\n',i,size(stFile{i},2));
-            end;
+            end
 
             % setup text to be displayed (as written, will center text and
             % wrap at default_wrap pixels)
@@ -629,12 +629,12 @@ for j = 1:number_of_trials,
                 Screen('FillRect',w,[0 0 0], rect -[-75 -75 75 75]);
             end
             displaycommand = sprintf('Screen(''DrawTexture'',w,imagetex(i),[],pRect{i});');
-        end; % if st(i)
+        end % if st(i)
         
         if DEBUG
             fprintf('\ni= %d,\nst(i) = %c\n',i, st(i));
             fprintf('displaycommand = %s\n\n',displaycommand);
-        end;
+        end
 
 
         %%%%%%%%%%%%%%%%%%%%%%%
@@ -649,7 +649,7 @@ for j = 1:number_of_trials,
         
         if st(i) ~= 's' %can't be a movie here
             onset(i) = start_time - experiment_start_time; %get onset of the stimulus for text and picture stims (movies and sound recorded above)
-        end;
+        end
      
         %update key info to save
         run_info.onsets=onset;
@@ -668,7 +668,7 @@ for j = 1:number_of_trials,
         %p = pause trial
         while (type(i) == 'p' && no_response_yet == 1) || (type(i) ~= 'p' && no_response_yet == 1 && GetSecs < start_time + stimulus_duration(i)),
             [keyIsDown,secs,keyCode]=KbCheck(inputDevice);
-            if keyIsDown, %key is pressed
+            if keyIsDown %key is pressed
                 key_presses.key{length(key_presses.key)+1} = KbName(keyCode);
                 key_presses.time(length(key_presses.time)+1) = GetSecs - experiment_start_time;
                 key_presses.stimulus{length(key_presses.stimulus)+1} = stFileName{i};
@@ -684,25 +684,25 @@ for j = 1:number_of_trials,
                         % Close the audio device:
                         PsychPortAudio('Close', pahandle);
                         sound_closed = 1;
-                    end;
+                    end
                     break;
-                else
+                %else
                     %Note: be aware that if you keep this part of the code,
                     %and specify certain stop events, if someone presses a
                     %key that is not a stop event and holds it down, no
                     %other keys will be recorded (including stop events)
                     %until the first key is released.
                   
-                    while keyIsDown %wait until key is released to start outer loop again 
-                        [keyIsDown,secs,keyCode]=KbCheck(inputDevice);
-                        WaitSecs(0.001);
-                    end
-                end;
-            end;
-        end;
-    end;
+                    %while keyIsDown %wait until key is released to start outer loop again 
+                    %    [keyIsDown,secs,keyCode]=KbCheck(inputDevice);
+                    %    WaitSecs(0.001);
+                    %end
+                end
+            end
+        end
+    end
     
-    if st(i) == 's' && ~sound_closed;
+    if st(i) == 's' && ~sound_closed
       
         % Stop playback:
         PsychPortAudio('Stop', pahandle);
@@ -710,7 +710,7 @@ for j = 1:number_of_trials,
         % Close the audio device:
         PsychPortAudio('Close', pahandle);
       
-    end;
+    end
         
     duration(i) = GetSecs - onset(i) - experiment_start_time; %record actual stimulus duration time
         
@@ -722,7 +722,7 @@ for j = 1:number_of_trials,
         while GetSecs < pre_start_time+totTime(i) && type(i) ~= 'p'
             
             [keyIsDown,secs,keyCode]=KbCheck(inputDevice);
-            if keyIsDown, %key is pressed
+            if keyIsDown %key is pressed
                 key_presses.key{length(key_presses.key)+1} = KbName(keyCode);
                 key_presses.time(length(key_presses.time) +1) = GetSecs - experiment_start_time;
                 if isempty(bgFileName{i})
@@ -730,22 +730,22 @@ for j = 1:number_of_trials,
                 else
                     key_presses.stimulus{length(key_presses.stimulus) +1} = [bgFileName{i} ', st was ' stFileName{i}];
                 end
-            end;
+            end
             
             while keyIsDown && GetSecs < pre_start_time+totTime(i)
                 [keyIsDown,secs,keyCode]=KbCheck(inputDevice);
                 WaitSecs(0.001);
             end
-        end;
+        end
         
-    end;
+    end
     
     % Wait for interstimulus interval
     if interstimulus_interval ~= 0
         eval(default_display); %puts up default display for isi
         Screen('Flip',w);
         start_time = GetSecs;
-        while GetSecs < start_time + interstimulus_interval,
+        while GetSecs < start_time + interstimulus_interval
             [keyIsDown,secs,keyCode]=KbCheck(inputDevice);
             if keyIsDown, %key is pressed
                 key_presses.key{length(key_presses.key)+1} = KbName(keyCode);
@@ -758,8 +758,8 @@ for j = 1:number_of_trials,
                 WaitSecs(0.001);
             end
             %WaitSecs(0.001);  % prevents overload and decrement of priority
-        end;
-    end;
+        end
+    end
     fprintf('It took %f seconds between pre_start_time and onset.\n',onset(i)-pre_start_time +experiment_start_time)
     
     %LK's attempt to close leftover textures
@@ -767,7 +767,7 @@ for j = 1:number_of_trials,
         Screen('Close',imagetex(i))
     end
     
-end;%for j
+end%for j
 
 Screen('Close');
 fprintf('The experiment lasted %f seconds\n',GetSecs-experiment_start_time)
